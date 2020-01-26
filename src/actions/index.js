@@ -38,11 +38,71 @@ function setToken(token) {
   }
 }
 
+export const REQUEST_PRODUCTS = 'REQUEST_PRODUCTS'
+function requestProducts(page) {
+  return {
+    type: REQUEST_PRODUCTS,
+    page: page
+  }
+}
+
+export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS'
+function receiveProducts(page, json) {
+  return {
+    type: RECEIVE_PRODUCTS,
+    page: page,
+    pageProducts: json
+  }
+}
+
 export function initializeToken()
 {
   return function (dispatch) {
     let token = localStorage.getItem('x-auth')
     dispatch(setToken(token))
+  }
+}
+
+
+export function fetchProducts(page, handler = null)
+{
+  
+  return function (dispatch, getState) {
+
+    let config = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      //body: JSON.stringify(credentials)
+    }
+  
+    const state = getState()
+
+    if (page in state.products.pages) {
+      return
+    }
+
+    dispatch(requestProducts(page))
+    fetch(`http://localhost:3000/api/products/list?p=${page}`, config).then(response => {
+      console.log(response)
+      if (response.status !== 200) {
+        if (handler !== null) {
+          handler('unkown error')
+        }
+        return null
+      }
+      return response.json()
+    })
+      .then(json => {
+        if (json !== null && json.status !== 'error') {
+          dispatch(receiveProducts(page, json))
+        } else {
+          if (handler !== null) {
+            handler(json.message)
+          }
+        }
+      })
   }
 }
 
@@ -153,6 +213,10 @@ export function fetchIdentity() {
     fetch(`http://localhost:3000/api/identity`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedRequestIdentity())
+        if (response.status === 401) {
+          localStorage.removeItem('x-auth')
+          dispatch(invalidateToken())
+        }
         return null
       }
 

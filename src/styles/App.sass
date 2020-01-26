@@ -1,10 +1,10 @@
 // _base.scss
-$font-stack: Helvetica, sans-serif
-$primary-color: #3f3
+// $font-stack: Helvetica, sans-serif
+// $primary-color: #3f3
 
-body
-  font: 100% $font-stack
-  color: $primary-color
+// body
+//   font: 100% $font-stack
+//   color: $primary-color
 
 #components-form-demo-normal-login .login-form
   max-width: 300px
@@ -37,3 +37,25 @@ body
 @media screen and ( min-width: 600px )
   .auth-window
     width: 500px
+
+#components-layout-demo-custom-trigger .trigger
+  font-size: 18px
+  line-height: 64px
+  padding: 0 24px
+  cursor: pointer
+  transition: color 0.3s
+  color: #424d57
+
+  &:hover
+    color: #1890ff
+
+#components-layout-demo-custom-trigger .logo
+  height: 32px
+  background: rgba(255, 255, 255, 0.2)
+  margin: 16px
+
+.my-trigger
+  width: 100%
+  background: #88888822
+  &:hover
+    background: #1890ff22
