@@ -2,7 +2,8 @@ import _ from 'lodash'
 const defaultState = {
     frozen: null,
     products: [],
-    total: null
+    total: null,
+    pendingRequest: false
 }
 
 const basket = (state = defaultState, action) => {
@@ -10,15 +11,17 @@ const basket = (state = defaultState, action) => {
     switch (action.type) {
         case 'REQUEST_BASKET': {
             let newState = _.cloneDeep(state)
+            newState.pendingRequest = true
             return newState
         }
-        case 'FAILED_REQUEST_BASKET': {
+        case 'FAILED_RECEIVE_BASKET': {
             let newState = _.cloneDeep(state)
+            newState.pendingRequest = false
             return newState
         }
         case 'RECEIVE_BASKET': {
             let newState = _.cloneDeep(state)
-            console.log(newState)
+            newState.pendingRequest = false
             newState.total = action.total
             newState.frozen = action.frozen
             newState.products = [...action.products]

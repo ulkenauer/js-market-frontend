@@ -7,8 +7,10 @@ import { Pagination, Row, Col, Button, Form ,Radio, Input,InputNumber, Divider} 
 
 import {connect} from 'react-redux'
 import { fetchProductDetails } from '../../actions'
+import { setBasketItemRequest } from '../../actions'
+import Counter from './Parts/Counter'
 
-const Product = ({ dispatch }) => {
+const Product = ({ dispatch, basket }) => {
     let { id } = useParams()
 
     const [flag, setFlag] = useState(false)
@@ -24,13 +26,19 @@ const Product = ({ dispatch }) => {
         setFlag(true)
     }
 
+    const onChange = productId => amount => {
+        dispatch(setBasketItemRequest(productId, amount))
+    }
+
     return (
         <div>
             <h1>Продукт</h1>
             {
                 (() => {
                     if (product !== null) {
-                        let imageSource = 'http://localhost:3000/' + ( product.imageUrl === null ? 'images/default.jpg' : product.imageUrl)
+                        let imageSource = 'http://localhost:3000/' + (product.imageUrl === null ? 'images/default.jpg' : product.imageUrl)
+                        let basketItem = _.find(basket.products, basketProduct => product.id === basketProduct.id)
+
                         return (<div>
                             <Row gutter={[16, 16]}>
                                 <Col xs={24} md={14} >
@@ -44,10 +52,16 @@ const Product = ({ dispatch }) => {
                                 <span style={{ marginTop: '20px' }}>{_.capitalize(product.measureUnitsHint)}: {product.measureUnits} {product.measureUnitsText}</span>
                                     <Divider />
                                     <span className="price">{product.price.toFixed(2)}$</span>
-                                    <div style={{ display: 'inline-block', float:"right" }}>
-                                    <Button style={{height: '40px', borderRadius: '5px 0 0 5px'}} type="primary">-</Button>
-                                        <span style={{height: '40px'}} className="number-display"> <span className="number">1</span></span>
-                                    <Button style={{height: '40px', borderRadius: '0 5px 5px 0'}} type="primary">+</Button>
+                                    <div style={{ display: 'inline-block', float: "right" }}>
+                                        {
+                                            (() => {
+                                                if (basketItem === undefined) {
+                                                    return (<Counter disabled={basket.pendingRequest} onChange={onChange(product.id)} value={0} />)
+                                                } else {
+                                                    return (<Counter disabled={basket.pendingRequest} onChange={onChange(product.id)} value={basketItem.amount} type="primary" />)
+                                                }
+                                            })()
+                                        }
                                     </div>
                                 </Col>
                             </Row>
@@ -60,4 +74,9 @@ const Product = ({ dispatch }) => {
     )
 }
 
-export default connect()(Product)
+
+const mapStateToProps = state => ({
+    basket: state.basket
+})
+
+export default connect(mapStateToProps)(Product)

@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import {connect} from 'react-redux'
-import { setBasketItemRequest } from '../../actions'
+import { freezeBasketRequest, setBasketItemRequest, clearBasketRequest } from '../../actions'
 
 import BasketItem from './Parts/BasketItem'
 import { Divider, Button, Row } from 'antd'
-import Counter from './Parts/Counter'
 
-const Basket = ({ logout, setBasketItemRequest, basket, user }) => {
+const Basket = ({ logout, freezeBasketRequest, clearBasketRequest, setBasketItemRequest, basket, user }) => {
 
     const onChange = productId => amount => {
         console.log(`${productId} ${amount}`)
@@ -18,11 +17,11 @@ const Basket = ({ logout, setBasketItemRequest, basket, user }) => {
     return (
         <div>
             <h1>Корзина</h1>
-            <Button style={{marginRight: 10}} type="primary">Заморозить</Button>
-            <Button style={{marginTop: 10}} type="danger">Очистить</Button>
+            <Button disabled={basket.pendingRequest || basket.products.length === 0 || basket.frozen} onClick={freezeBasketRequest} style={{marginRight: 10}} type="primary">Заморозить</Button>
+            <Button disabled={basket.pendingRequest || basket.products.length === 0} onClick={clearBasketRequest} style={{marginTop: 10}} type="danger">Очистить</Button>
             <Divider/>
             {
-                _.map(basket.products, product => (<div key={product.id}><BasketItem onChange={onChange(product.id)} basketItem={product} /><Divider/></div>))
+                _.map(basket.products, product => (<div key={product.id}><BasketItem disabled={basket.pendingRequest} onChange={onChange(product.id)} basketItem={product} /><Divider/></div>))
             }
             <div className="price" style={{float: "right"}}>
                 Итого к оплате: {basket.total === null ? '' : basket.total.toFixed(2)}$
@@ -43,6 +42,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setBasketItemRequest: (id, amount) => dispatch(setBasketItemRequest(id, amount)),
+    clearBasketRequest: () => dispatch(clearBasketRequest()),
+    freezeBasketRequest: () => dispatch(freezeBasketRequest()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Basket)

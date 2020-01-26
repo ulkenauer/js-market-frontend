@@ -319,3 +319,67 @@ export function setBasketItemRequest(id, amount) {
     })
   }
 }
+
+export function clearBasketRequest() {
+  return function(dispatch, getState) {
+    let config = {
+      method: 'POST',
+      headers: {
+        'x-auth': getState().user.token,
+      },
+    }
+    
+    dispatch(requestBasket())
+    fetch(`http://localhost:3000/api/basket/clear`, config).then(response => {
+      if (response.status !== 200) {
+        dispatch(failedReceiveBasket())
+        console.log(response)
+        if (response.status === 401) {
+          localStorage.removeItem('x-auth')
+          dispatch(invalidateToken())
+        }
+        return null
+      }
+
+      return response.json()
+    })
+    .then(json => {
+      if (json !== null) {
+        console.log(json)
+        dispatch(receiveBasket(json))
+      }
+    })
+  }
+}
+
+export function freezeBasketRequest() {
+  return function(dispatch, getState) {
+    let config = {
+      method: 'POST',
+      headers: {
+        'x-auth': getState().user.token,
+      },
+    }
+    
+    dispatch(requestBasket())
+    fetch(`http://localhost:3000/api/basket/freeze`, config).then(response => {
+      if (response.status !== 200) {
+        dispatch(failedReceiveBasket())
+        console.log(response)
+        if (response.status === 401) {
+          localStorage.removeItem('x-auth')
+          dispatch(invalidateToken())
+        }
+        return null
+      }
+
+      return response.json()
+    })
+    .then(json => {
+      if (json !== null) {
+        console.log(json)
+        dispatch(receiveBasket(json))
+      }
+    })
+  }
+}
