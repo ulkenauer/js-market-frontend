@@ -63,6 +63,31 @@ export function initializeToken()
   }
 }
 
+export function fetchProductDetails(id, handler) {
+  const config = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }
+
+  return function (dispatch, getState) {
+
+    fetch(`http://localhost:3000/api/products/detail?id=${id}`, config).then(response => {
+
+      if (response.status !== 200) {
+        handler(null)
+        return null
+      }
+      return response.json()
+    })
+      .then(json => {
+        if (json !== null && json.status !== 'error') {
+          handler(json)
+        }
+      })
+  }
+}
 
 export function fetchProducts(page, handler = null)
 {
@@ -74,7 +99,6 @@ export function fetchProducts(page, handler = null)
       headers: {
         'Content-Type': 'application/json'
       },
-      //body: JSON.stringify(credentials)
     }
   
     const state = getState()
@@ -123,7 +147,6 @@ export function login(credentials, handler)
       headers: {
         'Content-Type': 'application/json'
       },
-      //body: JSON.stringify(credentials)
     }
   
     fetch(`http://localhost:3000/auth/login?phone=${credentials.phone}&password=${credentials.password}`, config).then(response => {
@@ -154,7 +177,6 @@ export function register(credentials, handler)
       headers: {
         'Content-Type': 'application/json'
       },
-      //body: JSON.stringify(credentials)
     }
   
     fetch(`http://localhost:3000/auth/register?phone=${credentials.phone}&password=${credentials.password}`, config).then(response => {
@@ -176,17 +198,8 @@ export function register(credentials, handler)
   }
 }
 
-// Meet our first thunk action creator!
-// Though its insides are different, you would use it just like any other action creator:
-// store.dispatch(fetchPosts('reactjs'))
 export function fetchIdentity() {
-  // Thunk middleware knows how to handle functions.
-  // It passes the dispatch method as an argument to the function,
-  // thus making it able to dispatch actions itself.
   return function(dispatch, getState) {
-    // First dispatch: the app state is updated to inform
-    // that the API call is starting.
-    console.log('cucumber')
     let config = {
       method: 'GET',
       //cors: 'cors',
@@ -196,20 +209,7 @@ export function fetchIdentity() {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     }
-    console.log('cucumber')
     dispatch(requestIdentity())
-    // return
-    // The function called by the thunk middleware can return a value,
-    // that is passed on as the return value of the dispatch method.
-    // In this case, we return a promise to wait for.
-    // This is not required by thunk middleware, but it is convenient for us.
-
-    // return async function ()
-    // {
-      //   let result = await fetch(`http://localhost:3000/api/identity`)
-      //   console.log(result)
-      // }
-
     fetch(`http://localhost:3000/api/identity`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedRequestIdentity())
@@ -227,26 +227,95 @@ export function fetchIdentity() {
         dispatch(receiveIdentity(json))
       }
     })
+  }
+}
 
-    // return fetch(`http://localhost:3000/api/identity`)
-    //   .then(
-    //     response => {
-    //       console.log(response)
-    //       //response.json()
-    //       response.json().then(item => {console.log(item)}).catch(item => {console.log(item)})
-    //     }
-    //     // Do not use catch, because that will also catch
-    //     // any errors in the dispatch and resulting render,
-    //     // causing a loop of 'Unexpected batch number' errors.
-    //     // https://github.com/facebook/react/issues/6895
-    //     //error => console.log('An error occurred.', error)
-    //   )
-    //   .then(json => {
-    //     console.log(json)
-    //     // We can dispatch many times!
-    //     // Here, we update the app state with the results of the API call.
-    //     dispatch(receiveIdentity(json))
-    //   }
-    //   )
+export const REQUEST_BASKET = 'REQUEST_BASKET'
+function requestBasket() {
+  return {
+    type: REQUEST_BASKET,
+  }
+}
+
+export const RECEIVE_BASKET = 'RECEIVE_BASKET'
+function receiveBasket(json) {
+  return {
+    type: RECEIVE_BASKET,
+    frozen: json.frozen,
+    total: json.total,
+    products: json.products,
+  }
+}
+export const FAILED_RECEIVE_BASKET = 'FAILED_RECEIVE_BASKET'
+function failedReceiveBasket() {
+  return {
+    type: FAILED_RECEIVE_BASKET,
+  }
+}
+
+export function fetchBasket() {
+  return function(dispatch, getState) {
+    let config = {
+      method: 'GET',
+      headers: {
+        'x-auth': getState().user.token
+      },
+    }
+    
+    dispatch(requestBasket())
+    fetch(`http://localhost:3000/api/basket`, config).then(response => {
+      if (response.status !== 200) {
+        dispatch(failedReceiveBasket())
+        console.log(response)
+        if (response.status === 401) {
+          localStorage.removeItem('x-auth')
+          dispatch(invalidateToken())
+        }
+        return null
+      }
+
+      return response.json()
+    })
+    .then(json => {
+      if (json !== null) {
+        console.log(json)
+        dispatch(receiveBasket(json))
+      }
+    })
+  }
+}
+
+export function setBasketItemRequest(id, amount) {
+  return function(dispatch, getState) {
+    let config = {
+      method: 'POST',
+      headers: {
+        'x-auth': getState().user.token,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({product_id: id, amount: amount})
+      //body: JSON.stringify({product_id: id, amount: amount})
+    }
+    
+    dispatch(requestBasket())
+    fetch(`http://localhost:3000/api/basket/set-good`, config).then(response => {
+      if (response.status !== 200) {
+        dispatch(failedReceiveBasket())
+        console.log(response)
+        if (response.status === 401) {
+          localStorage.removeItem('x-auth')
+          dispatch(invalidateToken())
+        }
+        return null
+      }
+
+      return response.json()
+    })
+    .then(json => {
+      if (json !== null) {
+        console.log(json)
+        dispatch(receiveBasket(json))
+      }
+    })
   }
 }

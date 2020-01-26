@@ -31,7 +31,7 @@ const Market = ({ products, fetchProducts, user }) => {
     useEffect(() => {
         if (page > products.maxPage && page in products.pages && products.pages[page].status === 'empty') {
             //setPage(1)
-            history.push(`${path}?p=${products.maxPage}`)
+            history.push(`${url}?p=${products.maxPage}`)
             //setPage(products)
         }
     })
@@ -49,7 +49,7 @@ const Market = ({ products, fetchProducts, user }) => {
     const handlePagination = function (page, pageSize) {
         //fetchProducts(page)
         //setPage(page)
-        history.push(`${path}?p=${page}`)
+        history.push(`${url}?p=${page}`)
     }
 
     console.log(page)
@@ -59,7 +59,7 @@ const Market = ({ products, fetchProducts, user }) => {
             productItems = products.pages[page].products
         }
     }
-
+/* product.price.toFixed(2) + '$' */
     return (
         <div>
             <h1>Магазин</h1>
@@ -72,13 +72,21 @@ const Market = ({ products, fetchProducts, user }) => {
                     let imageSource = 'http://localhost:3000/' + ( product.imageUrl === null ? 'images/default.jpg' : product.imageUrl)
                 return (
                     <Col xs={24} sm={12} xl={6} key={product.id} span={6}>
-                        <Card hoverable cover={<img style={{height: 300, objectFit: 'cover'}} alt="example" src={imageSource} />}>
-                            <Meta title={product.name} description={product.price.toFixed(2) + '$'} />
-                        </Card>
+                        <Link to={{pathname: `/market/product/${product.id}`}}>
+                            <Card hoverable cover={<img style={{height: 300, objectFit: 'cover'}} alt="example" src={imageSource} />}>
+                                <Meta title={product.name} description={(
+                                    <div>
+                                        <div style={{ float: 'left', display: 'inline-block', verticalAlign: 'top' }}> {product.price.toFixed(2) + '$'} </div>
+                                        <div style={{ float: 'right', display: 'inline-block', verticalAlign: 'top' }}>{product.measureUnits + ' ' + product.measureUnitsText}</div>
+                                    </div>)} />
+                            </Card>
+                        </Link>
                     </Col>)
                 })}
             </Row>
-            {/* <Pagination onChange={handlePagination} defaultCurrent={page}  /> */}
+            <div style={{margin: 20}}>
+            <Pagination current={page} onChange={handlePagination} pageSize={20} total={products.maxPage * 20} />
+            </div>
         </div>
     )
 }
