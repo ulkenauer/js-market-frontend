@@ -56,9 +56,9 @@ const Product = ({ dispatch, basket }) => {
                                         {
                                             (() => {
                                                 if (basketItem === undefined) {
-                                                    return (<Counter disabled={basket.pendingRequest} onChange={onChange(product.id)} value={0} />)
+                                                    return (<Counter disabled={basket.pendingRequest || basket.frozen} onChange={onChange(product.id)} value={0} />)
                                                 } else {
-                                                    return (<Counter disabled={basket.pendingRequest} onChange={onChange(product.id)} value={basketItem.amount} type="primary" />)
+                                                    return (<Counter disabled={basket.pendingRequest || basket.frozen} onChange={onChange(product.id)} value={basketItem.amount} type="primary" />)
                                                 }
                                             })()
                                         }

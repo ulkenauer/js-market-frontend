@@ -320,7 +320,7 @@ export function setBasketItemRequest(id, amount) {
   }
 }
 
-export function clearBasketRequest() {
+export function clearBasketRequest(handler) {
   return function(dispatch, getState) {
     let config = {
       method: 'POST',
@@ -338,6 +338,7 @@ export function clearBasketRequest() {
           localStorage.removeItem('x-auth')
           dispatch(invalidateToken())
         }
+        handler('Ваша корзина на данный момент в заморозке')
         return null
       }
 
