@@ -7,49 +7,69 @@ import { Pagination, Row, Col, Card, } from 'antd'
 const { Meta } = Card;
 
 import {connect} from 'react-redux'
-import { fetchProducts } from '../../actions'
+import { fetchProducts, invalidateProducts } from '../../actions'
+import Search from 'antd/lib/input/Search';
 
-const Market = ({ products, fetchProducts, user }) => {
+const Market = ({ products, invalidateProducts, fetchProducts, user }) => {
 
     const [flag, setFlag] = useState(false)
-
-    const [page, setPage] = useState(1)
 
     let { path, url } = useRouteMatch();
 
     let location = useLocation()
     
+    let history = useHistory()
     let pageSearch = location.search.match(/p=([0-9]+)/)
-
+    let searchSearch = location.search.match(/search=(.+)/)
+    
+    let currentPage = 1
     if (pageSearch !== null) {
-        let currentPage = Number(pageSearch[1])
-        if (page !== currentPage) {
-            setPage(currentPage)
-        }
+        currentPage = Number(pageSearch[1])
     }
 
+    let currentSearch = ''
+    if (searchSearch !== null) {
+        currentSearch = decodeURIComponent(searchSearch[1])
+    }
+    
+
+    const [page, setPage] = useState(currentPage)
+    const [search, setSearch] = useState(currentSearch)
+
     useEffect(() => {
+        let pageSearch = location.search.match(/p=([0-9]+)/)
+        let searchSearch = location.search.match(/search=(.+)/)
+        
+        let currentPage = 1
+        if (pageSearch !== null) {
+            currentPage = Number(pageSearch[1])
+        }
+    
+        let currentSearch = ''
+        if (searchSearch !== null) {
+            currentSearch = decodeURIComponent(searchSearch[1])
+        }
+
+        if (currentPage != page || decodeURIComponent(currentSearch) != decodeURIComponent(search)) {
+            history.push(`${url}?p=${page}&search=${encodeURIComponent(search)}`)
+        }
         if (page > products.maxPage && page in products.pages && products.pages[page].status === 'empty') {
-            //setPage(1)
-            history.push(`${url}?p=${products.maxPage}`)
-            //setPage(products)
+            setPage(products.maxPage)
+        }
+        if ((page in products.pages) === false) {
+            fetchProducts({page, search: encodeURIComponent(search)})
         }
     })
 
-
-    if ((page in products.pages) === false) {
-        console.log('page is not loaded')
-        fetchProducts(page)
-    }
-
-    console.log(products.length === 0)
-
-    let history = useHistory()
-
     const handlePagination = function (page, pageSize) {
         //fetchProducts(page)
-        //setPage(page)
-        history.push(`${url}?p=${page}`)
+        setPage(page)
+    }
+
+    const handleSearch = function (search) {
+        invalidateProducts()
+        setPage(1)
+        setSearch(search)
     }
 
     console.log(page)
@@ -59,12 +79,16 @@ const Market = ({ products, fetchProducts, user }) => {
             productItems = products.pages[page].products
         }
     }
-/* product.price.toFixed(2) + '$' */
+    
     return (
         <div>
             <h1>Магазин</h1>
             <div style={{margin: 20}}>
-            <Pagination current={page} onChange={handlePagination} pageSize={20} total={products.maxPage * 20} />
+                <Search placeholder="input search text" defaultValue={search} onSearch={handleSearch} enterButton />
+            </div>
+            <div style={{ margin: 20 }}>
+                
+                <Pagination current={page} onChange={handlePagination} pageSize={20} total={products.maxPage * 20} />
             </div>
             
             <Row gutter={[16, 16]}>
@@ -102,7 +126,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    fetchProducts: (page) => dispatch(fetchProducts(page)),
+    fetchProducts: (args) => dispatch(fetchProducts(args)),
+    invalidateProducts : () => dispatch(invalidateProducts())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Market)

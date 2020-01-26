@@ -46,6 +46,13 @@ function requestProducts(page) {
   }
 }
 
+export const INVALIDATE_PRODUCTS = 'INVALIDATE_PRODUCTS'
+export function invalidateProducts() {
+  return {
+    type: INVALIDATE_PRODUCTS,
+  }
+}
+
 export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS'
 function receiveProducts(page, json) {
   return {
@@ -89,9 +96,10 @@ export function fetchProductDetails(id, handler) {
   }
 }
 
-export function fetchProducts(page, handler = null)
+export function fetchProducts(args)
 {
-  
+  const { page, search, handler } = args
+  console.log(args)
   return function (dispatch, getState) {
 
     let config = {
@@ -107,11 +115,22 @@ export function fetchProducts(page, handler = null)
       return
     }
 
+    let url = `http://localhost:3000/api/products/list?p=${page}`
+    if (search !== undefined) {
+      //dispatch(invalidateProducts())
+      url += `&search=${search}`
+    }
+
+    console.log('UUUURRRRLLLL')
+    console.log(url)
+    console.log(search)
+    console.log('UUUURRRRLLLL')
+
     dispatch(requestProducts(page))
-    fetch(`http://localhost:3000/api/products/list?p=${page}`, config).then(response => {
+    fetch(url, config).then(response => {
       console.log(response)
       if (response.status !== 200) {
-        if (handler !== null) {
+        if (handler !== undefined) {
           handler('unkown error')
         }
         return null
@@ -122,7 +141,7 @@ export function fetchProducts(page, handler = null)
         if (json !== null && json.status !== 'error') {
           dispatch(receiveProducts(page, json))
         } else {
-          if (handler !== null) {
+          if (handler !== undefined) {
             handler(json.message)
           }
         }

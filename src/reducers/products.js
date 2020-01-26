@@ -8,19 +8,10 @@ const defaultState = {
 const products = (state = defaultState, action) => {
 
   switch (action.type) {
-    /* case 'ADD_TODO':
-      return [
-        ...state,
-        {
-          id: action.id,
-          text: action.text,
-          completed: false
-        }
-      ]
-    case 'TOGGLE_TODO':
-      return state.map(todo =>
-        todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
-      ) */
+    case 'INVALIDATE_PRODUCTS': {
+        let newState = _.cloneDeep(defaultState)
+        return newState
+    }
     case 'REQUEST_PRODUCTS': {
         let newState = _.cloneDeep(state)
         newState.pages[action.page] = { status: 'loading', products: [] }
