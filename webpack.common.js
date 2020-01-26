@@ -5,10 +5,7 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.join(__dirname, "/dist"),
-    //filename: "[name].[hash].js"
-    //filename: "[contenthash].js"
-    //filename: mode === 'production' ? '[name].[chunkhash].js' : '[name].[hash].js',
-    //filename: "index-bundle.js"
+    publicPath: '/'
   },
   module: {
     rules: [

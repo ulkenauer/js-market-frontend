@@ -5,3 +5,35 @@ $primary-color: #3f3
 body
   font: 100% $font-stack
   color: $primary-color
+
+#components-form-demo-normal-login .login-form
+  max-width: 300px
+
+#components-form-demo-normal-login .login-form-forgot
+  float: right
+
+#components-form-demo-normal-login .login-form-button
+  width: 100%
+
+#root
+  height: 100%
+  width: 100%
+
+.layout
+  height: 100%
+
+.auth-window
+  width: 85vw
+  background: #fff
+  padding: 24px
+  min-height: 280px
+  position: absolute
+  top: 50%
+  transform: translate(-50%, -50%)
+  margin-right: -50%
+  left: 50%
+  border-radius: 20px
+
+@media screen and ( min-width: 600px )
+  .auth-window
+    width: 500px
