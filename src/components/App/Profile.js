@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import { fetchIdentity } from '../../actions'
 import { logout } from '../../actions'
 
-import { Form, Icon, Input, Button, Checkbox, Row, Col } from 'antd';
+import { Form, Icon, Input, Button, Row, Col } from 'antd';
 
 const Profile = ({ logout, fetchIdentity, user }) => {
 

@@ -1,23 +1,22 @@
-import React, { Component, useState, useEffect } from "react";
-import { connect } from 'react-redux'
+import React, { useState, useEffect } from "react";
 import '../../styles/App.sass';
-import User from '../../containers/User'
-import { useRouteMatch, useLocation, useHistory, Link, Route, Switch, Redirect } from 'react-router-dom'
+import { useLocation, useHistory, Link, Route, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { Layout, Menu, Icon, Badge } from 'antd';
-import Profile from "./Profile";
-import Basket from "./Basket";
-import Market from "./Market";
-import Product from "./Product";
-import { createPortal } from "react-dom";
+
+import loadable from '@loadable/component'
+
+const Profile = loadable(() => import('./Profile'))
+const Basket = loadable(() => import('./Basket'))
+const Market = loadable(() => import('./Market'))
+const Product = loadable(() => import('./Product'))
 
 const { Header, Sider, Content } = Layout;
 
-const App = ({ fetchBasket, user, logout, basket }) => {
+const App = ({ fetchBasket, user, basket }) => {
   
   let location = useLocation()
-  let { path, url } = useRouteMatch();
 
   const [flag, setFlag] = useState(false)
 
@@ -60,22 +59,20 @@ const App = ({ fetchBasket, user, logout, basket }) => {
   }
 
   return (
-<Layout style={{minHeight: '100%', transition: 'all 0.2s', marginLeft: collapsed ? 80 : 200}} /* className="layout" */ id="components-layout-demo-custom-trigger">
+<Layout style={{minHeight: '100%', transition: 'all 0.2s', marginLeft: collapsed ? 80 : 200}} id="components-layout-demo-custom-trigger">
         <Sider trigger={null} collapsible collapsed={collapsed} style={{
         overflow: 'hidden',
         height: '100vh',
         position: 'fixed',
         left: 0,
       }}>
-        {/* <div className="logo" /> */}
+        
         <Icon
               className="trigger my-trigger"
-            /* type={collapsed ? 'menu-unfold' : 'menu-fold'} */
               type={collapsed ? 'right' : 'left'}
               onClick={toggle}
-            />
-              {/* <Badge style={{position: 'absolute'}} count={5}>
-              </Badge> */}
+        />
+        
           <Menu selectedKeys={[getRouteId()]} theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           
           <Menu.Item key="1">
@@ -110,7 +107,6 @@ const App = ({ fetchBasket, user, logout, basket }) => {
               minHeight: 280,
             }}
           >
-          {/* Content */}
           <Switch>
             <Route path="/profile" component={Profile} exact />
             <Route path="/basket" component={Basket} exact />
@@ -124,16 +120,7 @@ const App = ({ fetchBasket, user, logout, basket }) => {
         </Layout>
       </Layout>
 
-  )
-
-  return (
-    <div>
-      <h1>Init!</h1>
-      <button onClick={logout}>logout</button>
-        {/* <UserCard user={{ phone: 31224 }}></UserCard> */}
-        <User></User>
-    </div>
-)}
+  )}
 
 
 App.propTypes = {

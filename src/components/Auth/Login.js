@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { Layout, Menu, Breadcrumb } from 'antd';
-const { Header, Content, Footer } = Layout;
+import { Form, Icon, Input, Button } from 'antd';
 
 import {connect} from 'react-redux'
 
@@ -14,11 +12,7 @@ import PasswordValidator from '../../validators/PasswordValidator'
 import { login } from '../../actions'
 
 
-
-
-const NormalLoginForm = ({dispatch, form}) => {
-    // <div style={{ position: 'relative' }}>
-    //         <div style={{ position: 'absolute', top: '50%', transform: 'translate(0, -50%)' }}></div>
+const NormalLoginForm = ({ dispatch, form }) => {
     
     const [message, setMessage] = useState('')
 
@@ -45,12 +39,9 @@ const NormalLoginForm = ({dispatch, form}) => {
         <div>
             <h1>Авторизуйтесь</h1>
             {message}
-            {/* {phone}
-            {password} */}
             <Form id="components-form-demo-normal-login" onSubmit={handleSubmit} className="login-form">
                 <Form.Item required label="Телефон" style={{ marginBottom: "0" }}>
                     {getFieldDecorator('phone', {
-                        //rules: [{ required: true, message: 'Введите номер телефона' },
                         rules: [{validator: PhoneValidator}],
                     })(
                         <Input
@@ -62,7 +53,6 @@ const NormalLoginForm = ({dispatch, form}) => {
                 </Form.Item>
                 <Form.Item required label="Пароль">
                     {getFieldDecorator('Пароль', {
-                        //rules: [{ required: true, message: 'Введите пароль' }],
                         rules: [{validator: PasswordValidator}],
                     })(
                         <Input
@@ -74,14 +64,7 @@ const NormalLoginForm = ({dispatch, form}) => {
                     )}
                 </Form.Item>
                 <Form.Item style={{ marginBottom: "0" }}>
-                    {/* {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(<Checkbox>Remember me</Checkbox>)} */}
-                    {/* <a className="login-form-forgot" href="">
-            Forgot password
-          </a> */}
-                    <Button type="primary" onClick={handleSubmit} /* htmlType="submit" */ className="login-form-button">
+                    <Button type="primary" onClick={handleSubmit} className="login-form-button">
                         Войти
                     </Button>
                     Или <Link to={{pathname: '/auth/register'}}>зарегистрируйтесь</Link>

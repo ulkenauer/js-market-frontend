@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import {REQUEST_BASKET, FAILED_RECEIVE_BASKET, RECEIVE_BASKET} from '../actions'
 const defaultState = {
     frozen: null,
     products: [],
@@ -9,17 +10,17 @@ const defaultState = {
 const basket = (state = defaultState, action) => {
 
     switch (action.type) {
-        case 'REQUEST_BASKET': {
+        case REQUEST_BASKET: {
             let newState = _.cloneDeep(state)
             newState.pendingRequest = true
             return newState
         }
-        case 'FAILED_RECEIVE_BASKET': {
+        case FAILED_RECEIVE_BASKET: {
             let newState = _.cloneDeep(state)
             newState.pendingRequest = false
             return newState
         }
-        case 'RECEIVE_BASKET': {
+        case RECEIVE_BASKET: {
             let newState = _.cloneDeep(state)
             newState.pendingRequest = false
             newState.total = action.total

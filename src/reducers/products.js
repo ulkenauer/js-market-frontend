@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import {INVALIDATE_PRODUCTS, REQUEST_PRODUCTS, RECEIVE_PRODUCTS} from '../actions'
 const defaultState = {
     pages: {},
     maxPage: 1,
@@ -8,16 +9,16 @@ const defaultState = {
 const products = (state = defaultState, action) => {
 
   switch (action.type) {
-    case 'INVALIDATE_PRODUCTS': {
+    case INVALIDATE_PRODUCTS: {
         let newState = _.cloneDeep(defaultState)
         return newState
     }
-    case 'REQUEST_PRODUCTS': {
+    case REQUEST_PRODUCTS: {
         let newState = _.cloneDeep(state)
         newState.pages[action.page] = { status: 'loading', products: [] }
         return newState
     }
-    case 'RECEIVE_PRODUCTS': {
+    case RECEIVE_PRODUCTS: {
           let newState = _.cloneDeep(state)
           if (action.pageProducts.length === 0) {
             newState.pages[action.page] = { status: 'empty', products: action.pageProducts }

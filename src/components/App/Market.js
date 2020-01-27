@@ -10,33 +10,17 @@ import {connect} from 'react-redux'
 import { fetchProducts, invalidateProducts } from '../../actions'
 import Search from 'antd/lib/input/Search';
 
-const Market = ({ products, invalidateProducts, fetchProducts, user }) => {
-
-    const [flag, setFlag] = useState(false)
+const Market = ({ products, invalidateProducts, fetchProducts }) => {
 
     let { path, url } = useRouteMatch();
 
     let location = useLocation()
     
     let history = useHistory()
-    let pageSearch = location.search.match(/p=([0-9]+)/)
-    let searchSearch = location.search.match(/search=(.+)/)
-    
-    let currentPage = 1
-    if (pageSearch !== null) {
-        currentPage = Number(pageSearch[1])
-    }
 
-    let currentSearch = ''
-    if (searchSearch !== null) {
-        currentSearch = decodeURIComponent(searchSearch[1])
-    }
-    
-
-    const [page, setPage] = useState(currentPage)
-    const [search, setSearch] = useState(currentSearch)
-
-    useEffect(() => {
+    const getSearchParams = function ()
+    {
+        
         let pageSearch = location.search.match(/p=([0-9]+)/)
         let searchSearch = location.search.match(/search=(.+)/)
         
@@ -49,6 +33,16 @@ const Market = ({ products, invalidateProducts, fetchProducts, user }) => {
         if (searchSearch !== null) {
             currentSearch = decodeURIComponent(searchSearch[1])
         }
+        return [currentPage, currentSearch]
+    }
+
+    const [currentPage, currentSearch] = getSearchParams()
+
+    const [page, setPage] = useState(currentPage)
+    const [search, setSearch] = useState(currentSearch)
+
+    useEffect(() => {
+        const [currentPage, currentSearch] = getSearchParams()
 
         if (currentPage != page || decodeURIComponent(currentSearch) != decodeURIComponent(search)) {
             history.push(`${url}?p=${page}&search=${encodeURIComponent(search)}`)
@@ -62,7 +56,6 @@ const Market = ({ products, invalidateProducts, fetchProducts, user }) => {
     })
 
     const handlePagination = function (page, pageSize) {
-        //fetchProducts(page)
         setPage(page)
     }
 
@@ -72,7 +65,6 @@ const Market = ({ products, invalidateProducts, fetchProducts, user }) => {
         setSearch(search)
     }
 
-    console.log(page)
     let productItems = []
     if (page in products.pages) {
         if (products.pages[page].status === 'loaded') {
@@ -93,11 +85,10 @@ const Market = ({ products, invalidateProducts, fetchProducts, user }) => {
             
             <Row gutter={[16, 16]}>
                 {productItems.map(product => {
-                    let imageSource = 'http://localhost:3000/' + ( product.imageUrl === null ? 'images/default.jpg' : product.imageUrl)
                 return (
                     <Col xs={24} sm={12} xl={6} key={product.id} span={6}>
                         <Link to={{pathname: `/market/product/${product.id}`}}>
-                            <Card hoverable cover={<img style={{height: 300, objectFit: 'cover'}} alt="example" src={imageSource} />}>
+                            <Card hoverable cover={<img style={{height: 300, objectFit: 'cover'}} alt="example" src={product.imageUrl} />}>
                                 <Meta title={product.name} description={(
                                     <div>
                                         <div style={{ float: 'left', display: 'inline-block', verticalAlign: 'top' }}> {product.price.toFixed(2) + '$'} </div>

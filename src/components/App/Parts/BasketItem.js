@@ -6,12 +6,11 @@ import Counter from './Counter'
 
 const BasketItem = ({ basketItem, onChange, disabled }) => {
 
-    const imageSource = 'http://localhost:3000/' + ( basketItem.imageUrl === null ? 'images/default.jpg' : basketItem.imageUrl)
     return (
         <Row>
             <Col xs={24} md={6}>
                 <Link to={{pathname: `/market/product/${basketItem.id}`}}>
-                <img style={{width: '100%'}} src={imageSource}></img>
+                <img style={{width: '100%'}} src={basketItem.imageUrl}></img>
                 </Link>
             </Col>
             <Col xs={24} md={18}>

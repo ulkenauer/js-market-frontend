@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react'
-import PropTypes from 'prop-types'
+import React, {useState} from 'react'
 
-import {useParams, useHistory, useRouteMatch, Link, useLocation} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
-import { Pagination, Row, Col, Button, Form ,Radio, Input,InputNumber, Divider} from 'antd'
+import { Row, Col, Divider} from 'antd'
 
 import {connect} from 'react-redux'
 import { fetchProductDetails } from '../../actions'
@@ -17,7 +16,6 @@ const Product = ({ dispatch, basket }) => {
     const [product, setProduct] = useState(null)
     
     const handler = function (result) {
-        console.log(result)
         setProduct(result)
     }
 
@@ -36,13 +34,12 @@ const Product = ({ dispatch, basket }) => {
             {
                 (() => {
                     if (product !== null) {
-                        let imageSource = 'http://localhost:3000/' + (product.imageUrl === null ? 'images/default.jpg' : product.imageUrl)
                         let basketItem = _.find(basket.products, basketProduct => product.id === basketProduct.id)
 
                         return (<div>
                             <Row gutter={[16, 16]}>
                                 <Col xs={24} md={14} >
-                                    <img style={{ width: '100%', display: 'inline-block', verticalAlign: "top" }} src={imageSource}></img>    
+                                    <img style={{ width: '100%', display: 'inline-block', verticalAlign: "top" }} src={product.imageUrl}></img>    
                                 </Col>
                                 <Col xs={24} md={8} >
                                     <h2>{product.name}</h2>

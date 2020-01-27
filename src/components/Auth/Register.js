@@ -1,7 +1,5 @@
 import React, {useState} from 'react'
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { Layout, Menu, Breadcrumb } from 'antd';
-const { Header, Content, Footer } = Layout;
+import { Form, Icon, Input, Button } from 'antd';
 
 import PhoneValidator from '../../validators/PhoneValidator'
 import PasswordValidator from '../../validators/PasswordValidator'
@@ -13,14 +11,7 @@ import {register} from '../../actions'
 
 import { connect } from 'react-redux'
 
-const handleSubmit = function () {
-    console.log('submit')
-}
-
-const NormalRegisterForm = ({dispatch, form}) => {
-    // <div style={{ position: 'relative' }}>
-    //         <div style={{ position: 'absolute', top: '50%', transform: 'translate(0, -50%)' }}></div>
-
+const NormalRegisterForm = ({ dispatch, form }) => {
     const [message, setMessage] = useState('')
 
     const [phone, setPhone] = useState('')
@@ -71,13 +62,6 @@ const NormalRegisterForm = ({dispatch, form}) => {
                     )}
                 </Form.Item>
                 <Form.Item style={{ marginBottom: "0" }}>
-                    {/* {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(<Checkbox>Remember me</Checkbox>)} */}
-                    {/* <a className="login-form-forgot" href="">
-            Forgot password
-          </a> */}
                     <Button type="primary" onClick={handleSubmit} className="login-form-button">
                         Зарегистрироваться
                     </Button>

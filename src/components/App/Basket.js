@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import {connect} from 'react-redux'
 import { freezeBasketRequest, setBasketItemRequest, clearBasketRequest } from '../../actions'
 
 import BasketItem from './Parts/BasketItem'
-import { Divider, Button, Row, notification } from 'antd'
+import { Divider, Button, notification } from 'antd'
 
-const Basket = ({ logout, freezeBasketRequest, clearBasketRequest, setBasketItemRequest, basket, user }) => {
+const Basket = ({ freezeBasketRequest, clearBasketRequest, setBasketItemRequest, basket }) => {
 
     const onChange = productId => amount => {
-        console.log(`${productId} ${amount}`)
         setBasketItemRequest(productId, amount)
     }
 

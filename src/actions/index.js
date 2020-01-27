@@ -1,9 +1,10 @@
 import fetch from 'cross-fetch'
+import { apiBaseUrl } from '../../config.json'
+
 export const REQUEST_IDENTITY = 'REQUEST_IDENTITY'
 function requestIdentity() {
   return {
     type: REQUEST_IDENTITY,
-    phone: 'gittin phon',
   }
 }
 
@@ -19,7 +20,6 @@ export const FAILED_REQUEST_IDENTITY = 'FAILED_REQUEST_IDENTITY'
 function failedRequestIdentity() {
   return {
     type: FAILED_REQUEST_IDENTITY,
-    phone: 'unable to get phon',
   }
 }
 
@@ -80,7 +80,7 @@ export function fetchProductDetails(id, handler) {
 
   return function (dispatch, getState) {
 
-    fetch(`http://localhost:3000/api/products/detail?id=${id}`, config).then(response => {
+    fetch(`${apiBaseUrl}/api/products/detail?id=${id}`, config).then(response => {
 
       if (response.status !== 200) {
         handler(null)
@@ -99,7 +99,6 @@ export function fetchProductDetails(id, handler) {
 export function fetchProducts(args)
 {
   const { page, search, handler } = args
-  console.log(args)
   return function (dispatch, getState) {
 
     let config = {
@@ -115,20 +114,13 @@ export function fetchProducts(args)
       return
     }
 
-    let url = `http://localhost:3000/api/products/list?p=${page}`
+    let url = `${apiBaseUrl}/api/products/list?p=${page}`
     if (search !== undefined) {
-      //dispatch(invalidateProducts())
       url += `&search=${search}`
     }
 
-    console.log('UUUURRRRLLLL')
-    console.log(url)
-    console.log(search)
-    console.log('UUUURRRRLLLL')
-
     dispatch(requestProducts(page))
     fetch(url, config).then(response => {
-      console.log(response)
       if (response.status !== 200) {
         if (handler !== undefined) {
           handler('unkown error')
@@ -168,7 +160,7 @@ export function login(credentials, handler)
       },
     }
   
-    fetch(`http://localhost:3000/auth/login?phone=${credentials.phone}&password=${credentials.password}`, config).then(response => {
+    fetch(`${apiBaseUrl}/auth/login?phone=${credentials.phone}&password=${credentials.password}`, config).then(response => {
       
       if (response.status !== 200) {
         handler('unkown error')
@@ -198,7 +190,7 @@ export function register(credentials, handler)
       },
     }
   
-    fetch(`http://localhost:3000/auth/register?phone=${credentials.phone}&password=${credentials.password}`, config).then(response => {
+    fetch(`${apiBaseUrl}/auth/register?phone=${credentials.phone}&password=${credentials.password}`, config).then(response => {
       
       if (response.status !== 200) {
         handler('unkown error')
@@ -221,15 +213,12 @@ export function fetchIdentity() {
   return function(dispatch, getState) {
     let config = {
       method: 'GET',
-      //cors: 'cors',
       headers: {
-        //'Content-Type': 'application/json',
         'x-auth': getState().user.token
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     }
     dispatch(requestIdentity())
-    fetch(`http://localhost:3000/api/identity`, config).then(response => {
+    fetch(`${apiBaseUrl}/api/identity`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedRequestIdentity())
         if (response.status === 401) {
@@ -282,10 +271,9 @@ export function fetchBasket() {
     }
     
     dispatch(requestBasket())
-    fetch(`http://localhost:3000/api/basket`, config).then(response => {
+    fetch(`${apiBaseUrl}/api/basket`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedReceiveBasket())
-        console.log(response)
         if (response.status === 401) {
           localStorage.removeItem('x-auth')
           dispatch(invalidateToken())
@@ -297,7 +285,6 @@ export function fetchBasket() {
     })
     .then(json => {
       if (json !== null) {
-        console.log(json)
         dispatch(receiveBasket(json))
       }
     })
@@ -313,14 +300,12 @@ export function setBasketItemRequest(id, amount) {
         'content-type': 'application/json'
       },
       body: JSON.stringify({product_id: id, amount: amount})
-      //body: JSON.stringify({product_id: id, amount: amount})
     }
     
     dispatch(requestBasket())
-    fetch(`http://localhost:3000/api/basket/set-good`, config).then(response => {
+    fetch(`${apiBaseUrl}/api/basket/set-good`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedReceiveBasket())
-        console.log(response)
         if (response.status === 401) {
           localStorage.removeItem('x-auth')
           dispatch(invalidateToken())
@@ -332,7 +317,6 @@ export function setBasketItemRequest(id, amount) {
     })
     .then(json => {
       if (json !== null) {
-        console.log(json)
         dispatch(receiveBasket(json))
       }
     })
@@ -349,10 +333,9 @@ export function clearBasketRequest(handler) {
     }
     
     dispatch(requestBasket())
-    fetch(`http://localhost:3000/api/basket/clear`, config).then(response => {
+    fetch(`${apiBaseUrl}/api/basket/clear`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedReceiveBasket())
-        console.log(response)
         if (response.status === 401) {
           localStorage.removeItem('x-auth')
           dispatch(invalidateToken())
@@ -365,7 +348,6 @@ export function clearBasketRequest(handler) {
     })
     .then(json => {
       if (json !== null) {
-        console.log(json)
         dispatch(receiveBasket(json))
       }
     })
@@ -382,10 +364,9 @@ export function freezeBasketRequest() {
     }
     
     dispatch(requestBasket())
-    fetch(`http://localhost:3000/api/basket/freeze`, config).then(response => {
+    fetch(`${apiBaseUrl}/api/basket/freeze`, config).then(response => {
       if (response.status !== 200) {
         dispatch(failedReceiveBasket())
-        console.log(response)
         if (response.status === 401) {
           localStorage.removeItem('x-auth')
           dispatch(invalidateToken())
@@ -397,7 +378,6 @@ export function freezeBasketRequest() {
     })
     .then(json => {
       if (json !== null) {
-        console.log(json)
         dispatch(receiveBasket(json))
       }
     })
