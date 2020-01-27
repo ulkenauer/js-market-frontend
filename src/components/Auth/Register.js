@@ -1,17 +1,13 @@
-import React, {useState} from 'react'
+//VIEW
+import React, { useState } from 'react'
 import { Form, Icon, Input, Button } from 'antd';
 
 import PhoneValidator from '../../validators/PhoneValidator'
 import PasswordValidator from '../../validators/PasswordValidator'
 
-import '../../styles/App.sass'
 import { Link } from 'react-router-dom';
 
-import {register} from '../../actions'
-
-import { connect } from 'react-redux'
-
-const NormalRegisterForm = ({ dispatch, form }) => {
+const NormalRegisterForm = ({ register, form }) => {
     const [message, setMessage] = useState('')
 
     const [phone, setPhone] = useState('')
@@ -28,7 +24,7 @@ const NormalRegisterForm = ({ dispatch, form }) => {
     }
 
     const handleSubmit = function (e) {
-        dispatch(register({phone, password}, handler))
+        register({phone, password}, handler)
     }
 
     const { getFieldDecorator } = form;
@@ -74,4 +70,4 @@ const NormalRegisterForm = ({ dispatch, form }) => {
 
 const Register = Form.create({ name: 'normal_register' })(NormalRegisterForm);
 
-export default connect()(Register)
+export default Register

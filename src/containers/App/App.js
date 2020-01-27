@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import App from '../components/App/App'
-import { logout } from '../actions'
-import {fetchBasket} from '../actions'
+import App from '../../components/App/App'
+import { logout } from '../../actions'
+import {fetchBasket} from '../../actions'
 
 const mapStateToProps = state => ({
     user: state.user,

@@ -1,18 +1,14 @@
+//VIEW
 import React, { useState } from 'react'
 import { Form, Icon, Input, Button } from 'antd';
 
-import {connect} from 'react-redux'
-
-import '../../styles/App.sass'
 import { Link } from 'react-router-dom';
 
 import PhoneValidator from '../../validators/PhoneValidator'
 import PasswordValidator from '../../validators/PasswordValidator'
 
-import { login } from '../../actions'
 
-
-const NormalLoginForm = ({ dispatch, form }) => {
+const NormalLoginForm = ({ login, form }) => {
     
     const [message, setMessage] = useState('')
 
@@ -27,7 +23,7 @@ const NormalLoginForm = ({ dispatch, form }) => {
     }
 
     const handleSubmit = function (e) {
-        dispatch(login({phone, password}, handler))
+        login({phone, password}, handler)
     }
 
     const [phone, setPhone] = useState('')
@@ -76,4 +72,4 @@ const NormalLoginForm = ({ dispatch, form }) => {
 
 const Login = Form.create({ name: 'normal_login' })(NormalLoginForm);
 
-export default connect()(Login)
+export default Login

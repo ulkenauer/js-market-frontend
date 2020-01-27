@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
+//VIEW
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-import {useHistory, useRouteMatch, Link, useLocation} from 'react-router-dom'
+import {useHistory, useRouteMatch, useLocation} from 'react-router-dom'
 
-import { Pagination, Row, Col, Card, } from 'antd'
-const { Meta } = Card;
+import { Pagination, Row, Col, Input } from 'antd'
 
-import {connect} from 'react-redux'
-import { fetchProducts, invalidateProducts } from '../../actions'
-import Search from 'antd/lib/input/Search';
+const { Search } = Input
+
+import ProductCard from './Parts/ProductCard';
 
 const Market = ({ products, invalidateProducts, fetchProducts }) => {
 
@@ -75,8 +75,8 @@ const Market = ({ products, invalidateProducts, fetchProducts }) => {
     return (
         <div>
             <h1>Магазин</h1>
-            <div style={{margin: 20}}>
-                <Search placeholder="input search text" defaultValue={search} onSearch={handleSearch} enterButton />
+            <div style={{ margin: 20 }}>
+                <Search allowClear placeholder="input search text" defaultValue={search} onSearch={handleSearch} enterButton />
             </div>
             <div style={{ margin: 20 }}>
                 
@@ -87,15 +87,7 @@ const Market = ({ products, invalidateProducts, fetchProducts }) => {
                 {productItems.map(product => {
                 return (
                     <Col xs={24} sm={12} xl={6} key={product.id} span={6}>
-                        <Link to={{pathname: `/market/product/${product.id}`}}>
-                            <Card hoverable cover={<img style={{height: 300, objectFit: 'cover'}} alt="example" src={product.imageUrl} />}>
-                                <Meta title={product.name} description={(
-                                    <div>
-                                        <div style={{ float: 'left', display: 'inline-block', verticalAlign: 'top' }}> {product.price.toFixed(2) + '$'} </div>
-                                        <div style={{ float: 'right', display: 'inline-block', verticalAlign: 'top' }}>{product.measureUnits + ' ' + product.measureUnitsText}</div>
-                                    </div>)} />
-                            </Card>
-                        </Link>
+                        <ProductCard product={product} />
                     </Col>)
                 })}
             </Row>
@@ -111,14 +103,4 @@ Market.propTypes = {
     fetchProducts: PropTypes.func
 }
 
-const mapStateToProps = state => ({
-    user: state.user,
-    products: state.products,
-})
-
-const mapDispatchToProps = dispatch => ({
-    fetchProducts: (args) => dispatch(fetchProducts(args)),
-    invalidateProducts : () => dispatch(invalidateProducts())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Market)
+export default Market

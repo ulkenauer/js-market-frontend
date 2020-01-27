@@ -1,5 +1,5 @@
+//VIEW
 import React, { useState, useEffect } from "react";
-import '../../styles/App.sass';
 import { useLocation, useHistory, Link, Route, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
@@ -7,10 +7,10 @@ import { Layout, Menu, Icon, Badge } from 'antd';
 
 import loadable from '@loadable/component'
 
-const Profile = loadable(() => import('./Profile'))
-const Basket = loadable(() => import('./Basket'))
-const Market = loadable(() => import('./Market'))
-const Product = loadable(() => import('./Product'))
+const Profile = loadable(() => import('../../containers/App/Profile'))
+const Basket = loadable(() => import('../../containers/App/Basket'))
+const Market = loadable(() => import('../../containers/App/Market'))
+const Product = loadable(() => import('../../containers/App/Product'))
 
 const { Header, Sider, Content } = Layout;
 
@@ -18,6 +18,7 @@ const App = ({ fetchBasket, user, basket }) => {
   
   let location = useLocation()
 
+  //fetch basket only once (initialize)
   const [flag, setFlag] = useState(false)
 
   if (!flag) {

@@ -1,9 +1,6 @@
+//VIEW
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import {connect} from 'react-redux'
-import { fetchIdentity } from '../../actions'
-import { logout } from '../../actions'
 
 import { Form, Icon, Input, Button, Row, Col } from 'antd';
 
@@ -62,13 +59,4 @@ Profile.propTypes = {
     fetchIdentity: PropTypes.func
 }
 
-const mapStateToProps = state => ({
-    user: state.user
-})
-
-const mapDispatchToProps = dispatch => ({
-    fetchIdentity: () => dispatch(fetchIdentity()),
-    logout: () => dispatch(logout()),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+export default Profile

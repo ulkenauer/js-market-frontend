@@ -1,10 +1,10 @@
-import React, {useState} from 'react'
+//VIEW
+import React, { useState } from 'react'
 
 import {useParams} from 'react-router-dom'
 
 import { Row, Col, Divider} from 'antd'
 
-import {connect} from 'react-redux'
 import { fetchProductDetails } from '../../actions'
 import { setBasketItemRequest } from '../../actions'
 import Counter from './Parts/Counter'
@@ -71,9 +71,4 @@ const Product = ({ dispatch, basket }) => {
     )
 }
 
-
-const mapStateToProps = state => ({
-    basket: state.basket
-})
-
-export default connect(mapStateToProps)(Product)
+export default Product

@@ -11,10 +11,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import rootReducer from './reducers'
 import {initializeToken} from './actions/index'
 
+import './styles/App.sass';
+
 import loadable from '@loadable/component'
 
-const App = loadable(() => import('./containers/App.js'))
-const AuthContainer = loadable(() => import('./containers/AuthContainer'))
+const App = loadable(() => import('./containers/App/App'))
+const AuthContainer = loadable(() => import('./containers/Auth/Auth'))
 
 const store = createStore(rootReducer, applyMiddleware( thunkMiddleware, ))
 

@@ -1,15 +1,14 @@
+//VIEW
 import React, { useEffect } from "react";
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import Login from './Login'
-import Register from './Register'
+import Login from '../../containers/Auth/Login'
+import Register from '../../containers/Auth/Register'
 
 import PropTypes from 'prop-types'
 
 import { Layout } from 'antd';
 const { Content } = Layout;
-
-import '../../styles/App.sass'
 
 const Auth = ({ user }) => {
 

@@ -1,8 +1,6 @@
+//VIEW
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import {connect} from 'react-redux'
-import { freezeBasketRequest, setBasketItemRequest, clearBasketRequest } from '../../actions'
 
 import BasketItem from './Parts/BasketItem'
 import { Divider, Button, notification } from 'antd'
@@ -41,15 +39,4 @@ Basket.propTypes = {
     fetchIdentity: PropTypes.func
 }
 
-const mapStateToProps = state => ({
-    user: state.user,
-    basket: state.basket
-})
-
-const mapDispatchToProps = dispatch => ({
-    setBasketItemRequest: (id, amount) => dispatch(setBasketItemRequest(id, amount)),
-    clearBasketRequest: (handler) => dispatch(clearBasketRequest(handler)),
-    freezeBasketRequest: () => dispatch(freezeBasketRequest()),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Basket)
+export default Basket
