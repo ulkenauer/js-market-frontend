@@ -41,7 +41,7 @@
   "dependencies": {
     "@loadable/component": "^5.12.0",
     "antd": "^3.26.7",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cross-fetch": "^3.0.4",
     "lodash": "^4.17.15",
     "promise-polyfill": "^8.1.3",
